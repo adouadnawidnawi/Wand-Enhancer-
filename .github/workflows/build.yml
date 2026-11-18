@@ -1,20 +1,20 @@
 name: Build Executable
 on: [push, workflow_dispatch]
 jobs:
-  build:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      - name: Restore NuGet packages
-        run: dotnet restore Wand-Enhancer.sln
-      - name: Publish Project
-        run: dotnet publish WandEnhancer/WandEnhancer.csproj -c Release -o ./publish-output
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: WandEnhancer-EXE
-          path: ./publish-output/
+    build:
+      runs-on: windows-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '8.0.x'
+        - name: Restore NuGet Packages
+          run: dotnet restore Wand-Enhancer.sln
+        - name: Build Solution
+          run: dotnet build Wand-Enhancer.sln -c Release --no-restore
+        - name: Find and Upload EXE
+          uses: actions/upload-artifact@v4
+          with:
+            name: WandEnhancer-EXE
+            path: '**/bin/Release/**/*.exe'
